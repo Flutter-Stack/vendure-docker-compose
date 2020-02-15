@@ -1,0 +1,47 @@
+version: '3'
+
+networks:
+  commerce-network:
+
+services:
+  node-graphql-commerce:
+    build: .
+    volumes:
+      - ./commerce:/commerce
+      - ./postgress-check:/postgress-check
+    ports:
+      - 9005:9005
+    # working_dir: /usr/local/flutter_web_app
+    command: >
+      bash -c 'cd commerce && npm install && npm run start'
+    stdin_open: true
+    tty: true
+    networks:
+      - commerce-network
+    depends_on:
+        - postgresql
+    restart: always
+
+  # PostgreSQL:
+  #   restart: always
+  #   image: sameersbn/postgresql:10-2
+  #   ports:
+  #     - "5432:5432"
+  #   env_file:
+  #     - database.env
+  #   networks:
+  #     - commerce-network
+  #   volumes:
+  #     - ./database-data:/var/lib/postgresql
+
+  postgresql:
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: postgres_check
+      POSTGRES_USER: postgres_check
+      POSTGRES_PASSWORD: postgres_check
+    restart: always
+    volumes:
+      - ./database-data:/var/lib/postgresql
+    networks:
+      - commerce-network
