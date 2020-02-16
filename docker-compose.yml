@@ -11,15 +11,13 @@ services:
       - ./postgress-check:/postgress-check
     ports:
       - 9005:9005
-    # working_dir: /usr/local/flutter_web_app
-    command: >
-      bash -c 'cd commerce && npm install && npm run start'
+    command: bash -c "cd commerce && npm install && npm run start"
     stdin_open: true
     tty: true
     networks:
       - commerce-network
     depends_on:
-        - postgresql
+      - postgresql
     restart: always
 
   # PostgreSQL:
